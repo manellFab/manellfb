@@ -678,9 +678,34 @@ renderBoard();
       '<p style="margin:0 0 20px;"><strong>Attendance is mandatory.</strong></p>' +
       '<button type="button" style="padding:8px 16px;font-size:1rem;cursor:pointer;">OK, got it</button>';
     d.querySelector("button").addEventListener("click", function () { d.close(); });
-    d.addEventListener("close", function () { d.remove(); });
+    d.addEventListener("close", function () { d.remove(); showHelp(); });
     document.body.appendChild(d);
     d.showModal();
+  }
+  function tone() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AC();
+      [880, 1175].forEach(function (f, i) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.value = f; g.gain.value = 0.15;
+        o.connect(g); g.connect(ctx.destination);
+        o.start(ctx.currentTime + i * 0.3); o.stop(ctx.currentTime + i * 0.3 + 0.25);
+      });
+    } catch (e) {}
+  }
+  function showHelp() {
+    var h = document.createElement("dialog");
+    h.setAttribute("aria-labelledby", "help-title");
+    h.style.cssText = "max-width:420px;padding:24px;border:none;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);font-family:system-ui,sans-serif;";
+    h.innerHTML =
+      '<h2 id="help-title" style="margin:0 0 20px;font-size:1.25rem;">How can I help you?</h2>' +
+      '<button type="button" style="padding:8px 16px;font-size:1rem;cursor:pointer;">OK</button>';
+    h.querySelector("button").addEventListener("click", function () { h.close(); });
+    h.addEventListener("close", function () { h.remove(); });
+    document.body.appendChild(h);
+    h.showModal();
+    tone();
   }
   setTimeout(showDialog, DELAY_MS);
 })();
