@@ -659,5 +659,31 @@ initControls();
 wireEvents();
 renderBoard();
 </script>
+<script>
+/* IT security briefing notice: shown once per session after 10s on the page. */
+(function () {
+  var DELAY_MS = 10000;
+  var KEY = "itSecurityBriefingShown";
+  function shown() { try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
+  function mark() { try { sessionStorage.setItem(KEY, "1"); } catch (e) {} }
+  function showDialog() {
+    if (shown()) return;
+    mark();
+    var d = document.createElement("dialog");
+    d.setAttribute("aria-labelledby", "it-briefing-title");
+    d.style.cssText = "max-width:420px;padding:24px;border:none;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);font-family:system-ui,sans-serif;";
+    d.innerHTML =
+      '<h2 id="it-briefing-title" style="margin:0 0 12px;font-size:1.25rem;">IT Security Briefing</h2>' +
+      '<p style="margin:0 0 8px;">There is an IT security briefing at <strong>Town Hall on Wednesday at 10:00 AM</strong>.</p>' +
+      '<p style="margin:0 0 20px;"><strong>Attendance is mandatory.</strong></p>' +
+      '<button type="button" style="padding:8px 16px;font-size:1rem;cursor:pointer;">OK, got it</button>';
+    d.querySelector("button").addEventListener("click", function () { d.close(); });
+    d.addEventListener("close", function () { d.remove(); });
+    document.body.appendChild(d);
+    d.showModal();
+  }
+  setTimeout(showDialog, DELAY_MS);
+})();
+</script>
 </body>
 </html>
