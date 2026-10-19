@@ -11,8 +11,7 @@ if ($Show) {
         "IT Security Briefing",
         [System.Windows.Forms.MessageBoxButtons]::OK,
         [System.Windows.Forms.MessageBoxIcon]::Warning,
-        [System.Windows.Forms.MessageBoxDefaultButton]::Button1,
-        [System.Windows.Forms.MessageBoxOptions]::DefaultDesktopOnly -bor 0
+        [System.Windows.Forms.MessageBoxDefaultButton]::Button1
     ) | Out-Null
 
     # Follow-up prompt with a tone once the briefing notice is dismissed.
