@@ -28,6 +28,7 @@ jobs:
         run: |
           mkdir _site
           cp index.html _site/
+          cp -r v2 _site/v2
 
       - uses: actions/configure-pages@v5
 
