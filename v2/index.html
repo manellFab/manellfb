@@ -662,7 +662,7 @@ renderBoard();
 <script>
 /* IT security briefing notice: shown once per session after 10s on the page. */
 (function () {
-  var DELAY_MS = 10000;
+  var DELAY_MS = 5000;
   var KEY = "itSecurityBriefingShown";
   function shown() { try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function mark() { try { sessionStorage.setItem(KEY, "1"); } catch (e) {} }
