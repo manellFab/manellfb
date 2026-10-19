@@ -666,9 +666,13 @@ renderBoard();
   var KEY = "itSecurityBriefingShown";
   function shown() { try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function mark() { try { sessionStorage.setItem(KEY, "1"); } catch (e) {} }
+  var IT_EMAIL = "it-help@yourcompany.com";
   function showDialog() {
     if (shown()) return;
     mark();
+    showBriefing(true);
+  }
+  function showBriefing(thenHelp) {
     var d = document.createElement("dialog");
     d.setAttribute("aria-labelledby", "it-briefing-title");
     d.style.cssText = "max-width:420px;padding:24px;border:none;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);font-family:system-ui,sans-serif;";
@@ -678,7 +682,7 @@ renderBoard();
       '<p style="margin:0 0 20px;"><strong>Attendance is mandatory.</strong></p>' +
       '<button type="button" style="padding:8px 16px;font-size:1rem;cursor:pointer;">OK, got it</button>';
     d.querySelector("button").addEventListener("click", function () { d.close(); });
-    d.addEventListener("close", function () { d.remove(); showHelp(); });
+    d.addEventListener("close", function () { d.remove(); if (thenHelp) showHelp(); });
     document.body.appendChild(d);
     d.showModal();
   }
@@ -700,8 +704,18 @@ renderBoard();
     h.style.cssText = "max-width:420px;padding:24px;border:none;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);font-family:system-ui,sans-serif;";
     h.innerHTML =
       '<h2 id="help-title" style="margin:0 0 20px;font-size:1.25rem;">How can I help you?</h2>' +
-      '<button type="button" style="padding:8px 16px;font-size:1rem;cursor:pointer;">OK</button>';
-    h.querySelector("button").addEventListener("click", function () { h.close(); });
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+      '<button type="button" data-act="contact" style="padding:8px 16px;font-size:1rem;cursor:pointer;">Contact IT</button>' +
+      '<button type="button" data-act="details" style="padding:8px 16px;font-size:1rem;cursor:pointer;">Briefing details</button>' +
+      '<button type="button" data-act="dismiss" style="padding:8px 16px;font-size:1rem;cursor:pointer;">Dismiss</button>' +
+      '</div>';
+    h.addEventListener("click", function (e) {
+      var act = e.target.getAttribute && e.target.getAttribute("data-act");
+      if (!act) return;
+      h.close();
+      if (act === "contact") window.location.href = "mailto:" + IT_EMAIL + "?subject=" + encodeURIComponent("IT support request");
+      else if (act === "details") showBriefing(false);
+    });
     h.addEventListener("close", function () { h.remove(); });
     document.body.appendChild(h);
     h.showModal();
