@@ -63,8 +63,8 @@ if ($Show) {
     exit 0
 }
 
-Start-Process -WindowStyle Hidden -FilePath powershell.exe -ArgumentList @(
-    '-NoProfile', '-ExecutionPolicy', 'Bypass',
-    '-File', "`"$PSCommandPath`"", '-Show'
-)
+# Launch through WMI so the child is not part of the hook's process tree/job;
+# otherwise Claude Code can kill it as soon as the hook itself returns.
+$cmd = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$PSCommandPath`" -Show"
+Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $cmd } | Out-Null
 exit 0
